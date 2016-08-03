@@ -1,1 +1,24 @@
-print("Hello world!")
+alphabet = 'йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ';
+
+word = '';  #текущее слово
+
+try:
+    file = open('D:/forPython.txt', 'r');
+except FileNotFoundError:
+    print('Sorry! File is not exist!');
+else:
+    while 1:
+        line = file.readline();
+        if not line:
+            break;
+        for i in line:
+            if i in alphabet:   #если символ принадлежит русскому алфавиту
+                word += i;    #добавляем его в текущее слово
+            if (i == ' '):    #встретили пробел - печатаем текущее слово, стираем его
+                if (word != ''):
+                    print(word);
+                word = '';
+        if word != '':        #для последнего слова в файле(в конце файла нет пробела)
+            print(word);
+                
+    file.close();
