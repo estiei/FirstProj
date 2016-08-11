@@ -3,27 +3,13 @@
 
 def coupleOfWords(filename):
     alphabet = 'йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ';
-    word = '';#текущее слово
-    
     try:
-        file = open(filename, 'r');
-    #file = open('D:/forPython.txt', 'r');
+        with open(filename, 'r') as file:
+            return filter(None,''.join([x for x in ' '.join(file.readlines()) if x in alphabet+' ']).split())
     except FileNotFoundError:
         print('Sorry! File is not exist!');
-    else:
-        for line in file:
-            for i in line:
-                if i in alphabet:#если символ принадлежит русскому алфавиту
-                    word += i;#добавляем его в текущее слово
-                if (i == ' '):#встретили пробел - печатаем текущее слово, стираем его
-                    if (word != ''):
-                        
-                        yield word;
-                    word = '';
-            if word != '': #для последнего слова в файле(в конце файла нет пробела)
-                yield word;
-                
-        file.close();
+        exit()
+
 #вывод слов на экран
 filename = 'D:/forPython.txt'
 d = coupleOfWords(filename)
