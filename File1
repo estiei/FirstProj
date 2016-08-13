@@ -1,32 +1,39 @@
 ## Эта программа открывает файл, считывает его построчно, разбивает строки на слова, печатает все слова на экран, закрывает файл
 ## словом считается любая последовательность русских букв, разделённых пробелами
 
-def coupleOfWords(filename):
-    alphabet = 'йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ';
-    word = '';#текущее слово
-    
+alphabet = 'йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ';
+filename = 'D:/forPython.txt';
+
+def getword(filename): #Эта функция генерирует слова
     try:
         file = open(filename, 'r');
-    #file = open('D:/forPython.txt', 'r');
     except FileNotFoundError:
         print('Sorry! File is not exist!');
     else:
         for line in file:
+            nextword = ''
             for i in line:
                 if i in alphabet:#если символ принадлежит русскому алфавиту
-                    word += i;#добавляем его в текущее слово
-                if (i == ' '):#встретили пробел - печатаем текущее слово, стираем его
-                    if (word != ''):
-                        
-                        yield word;
-                    word = '';
-            if word != '': #для последнего слова в файле(в конце файла нет пробела)
-                yield word;
-                
-        file.close();
-#вывод слов на экран
-filename = 'D:/forPython.txt'
-d = coupleOfWords(filename)
-print(d)
-for x in d:
-    print(x)
+                    nextword += i;#добавляем его в текущее слово
+                if (i == ' ') and (nextword != ''):#встретили пробел - печатаем текущее слово, стираем его
+                    yield nextword;
+                    nextword = '';
+            if (nextword != ''):
+                yield nextword;
+    file.close()
+
+def couple(filename): #Эта функция возвращает кортеж из двух последовательно стоящих слов
+    gener = getword(filename)
+    flag = 0 #проверка, является ли слово первым в тексте
+    for x in gener:
+        nextword = x;
+        if flag == 1: #если слово не первое, возвращаем кортеж
+            yield[word, nextword]
+            word = nextword
+        else: #если слово первое в тексте, то возвращать пока нечего, и мы смиренно ждём второе слово
+            word = nextword
+            flag = 1
+
+gener2 = couple(filename)
+for x in gener2:
+    print(x[0], x[1])
