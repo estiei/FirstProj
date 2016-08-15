@@ -34,6 +34,33 @@ def couple(filename): #Эта функция возвращает кортеж �
             word = nextword
             flag = 1
 
+#работа с БД
+import sqlite3
+
+print('Enter name of BD')
+bdname = input()
+db_name = bdname + '.bd';
+
+con = sqlite3.connect(db_name)
+curs = con.cursor()
+
+curs.execute('CREATE TABLE IF NOT EXISTS words(id INTEGER PRIMARY KEY, word text, nextword text, weight int)')
+con.commit()
+
 gener2 = couple(filename)
 for x in gener2:
-    print(x[0], x[1])
+    curs.execute('SELECT COUNT(word) FROM words WHERE word = ? AND nextword = ?', (x[0], x[1]))#выбираем строку, где есть заданное слово
+    i = int(curs.fetchone()[0])#выбираем первую позицию из кортежа (=вес пары слов)
+    if i != 0:
+        curs.execute('SELECT * FROM words WHERE word = ? AND nextword = ?', (x[0], x[1]))
+        weight = int(curs.fetchone()[3])#получаем текущий вес словосочетания и дальше итерируем его
+        curs.execute( 'UPDATE words SET weight = ? WHERE word = ? AND nextword = ?', (weight+1, x[0], x[1]))
+    else:
+        curs.execute('INSERT INTO words(word, nextword, weight)VALUES(?, ?, 1)', (x[0], x[1]))#вставляем новую строку
+    con.commit()
+
+##вывести на экран и показать, что получилось
+curs.execute('SELECT * FROM words')
+print(curs.fetchall())
+##curs.execute('DROP TABLE words')
+con.commit()
