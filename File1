@@ -50,7 +50,7 @@ con.commit()
 gener2 = couple(filename)
 for x in gener2:
     curs.execute('SELECT COUNT(word) FROM words WHERE word = ? AND nextword = ?', (x[0], x[1]))#выбираем строку, где есть заданное слово
-    i = int(curs.fetchone()[0])#выбираем первую позицию из кортежа (=вес пары слов)
+    i = int(curs.fetchone()[0])#выбираем первую позицию из кортежа (1, если словосочетание существует, 0 иначе)
     if i != 0:
         curs.execute('SELECT * FROM words WHERE word = ? AND nextword = ?', (x[0], x[1]))
         weight = int(curs.fetchone()[3])#получаем текущий вес словосочетания и дальше итерируем его
